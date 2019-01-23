@@ -4,7 +4,11 @@ import random
 from PIL import Image
 
 # Generate background image, choose from a selection of colors (pretty pink, beautiful blue, etc.)
-background = Image.new('RGB', (2048, 2048), color=(252, 156, 246))
+colors = [
+    (252, 156, 246),  # pink
+    (102, 153, 255),  # blue
+]
+background = Image.new('RGB', (2048, 2048), color=random.choice(colors))
 
 for folder in os.listdir('Doggoparts/'):
     img_folder = 'Doggoparts/' + folder + '/'
