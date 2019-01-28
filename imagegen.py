@@ -15,6 +15,7 @@ dog_colors = [
     (139, 69, 19, 255),  # brown
 ]
 background = Image.new('RGB', (2048, 2048), color=random.choice(bg_colors))
+fur_color = random.choice(dog_colors)
 
 for folder in os.listdir('Doggoparts/'):
     img_folder = 'Doggoparts/' + folder + '/'
@@ -25,8 +26,7 @@ for folder in os.listdir('Doggoparts/'):
     if folder == '02_Faceshapes':
         width, height = img.size
         center = (int(0.5 * width), int(0.5 * height))
-        yellow = (255, 255, 0, 255)
-        ImageDraw.floodfill(img,  xy=center, value=random.choice(dog_colors))
+        ImageDraw.floodfill(img,  xy=center, value=fur_color)
 
     background.paste(img, (0, 0), img)
 
