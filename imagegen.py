@@ -2,6 +2,7 @@ from __future__ import print_function
 import os
 import random
 from PIL import Image, ImageDraw
+from floodfill import aggressive_floodfill
 
 # TODO: Gjør bakgrunn til alle hundedeler gjennomsiktig, også på innsiden.
 #  Modifiser floodfill() til å kun stoppe ved svarte streker
@@ -20,5 +21,5 @@ for folder in os.listdir('Doggoparts/'):
     )
     background.paste(img, (0, 0), img)
 
-ImageDraw.floodfill(background,  xy=(0, 0), value=random.choice(bg_colors))
+aggressive_floodfill(background,  xy=(0, 0), value=random.choice(bg_colors))
 background.save('image.png')
