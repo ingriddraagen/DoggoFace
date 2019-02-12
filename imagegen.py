@@ -14,9 +14,9 @@ from PIL import Image
 
 os.listdir()
 files = [
-'Ears/1.png',
+'Ears/3.png',
 'Faceshapes/1.png',
-  'Eyes/1.png',
+  'Eyes/2.png',
   'Accessories/1.png',
   'Noses/1.png']
 
