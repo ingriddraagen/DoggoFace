@@ -4,8 +4,6 @@ import random
 from PIL import Image, ImageDraw
 from floodfill import aggressive_floodfill
 
-# TODO: Gjør bakgrunn til alle hundedeler gjennomsiktig, også på innsiden.
-#  Modifiser floodfill() til å kun stoppe ved svarte streker
 
 # Generate background image, choose from a selection of bg_colors (pretty pink, beautiful blue, etc.)
 bg_colors = [
@@ -23,3 +21,4 @@ for folder in os.listdir('Doggoparts/'):
 
 aggressive_floodfill(background,  xy=(0, 0), value=random.choice(bg_colors))
 background.save('image.png')
+
