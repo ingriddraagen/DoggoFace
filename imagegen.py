@@ -1,31 +1,24 @@
-# Combine multiple images into one.
-#
-# To install the Pillow module on Mac OS X:
-#
-# $ xcode-select --install
-# $ brew install libtiff libjpeg webp little-cms2
-# $ pip install Pillow
-#
-
 from __future__ import print_function
 import os
-
-from PIL import Image
-
-os.listdir()
-files = [
-'Ears/3.png',
-'Faceshapes/1.png',
-  'Eyes/2.png',
-  'Accessories/1.png',
-  'Noses/1.png']
+import random
+from PIL import Image, ImageDraw
+from floodfill import aggressive_floodfill
 
 
+# Generate background image, choose from a selection of bg_colors (pretty pink, beautiful blue, etc.)
+bg_colors = [
+    (252, 156, 246, 255),  # pink
+    (102, 153, 255, 255),  # blue
+]
+background = Image.new('RGB', (2048, 2048), color=(0, 255, 255))
 
-background = Image.open(files[0])
+for folder in os.listdir('Doggoparts/'):
+    img_folder = 'Doggoparts/' + folder + '/'
+    img = Image.open(
+        img_folder + random.choice(os.listdir(img_folder))
+    )
+    background.paste(img, (0, 0), img)
 
-for file in files[1:]:
-    img = Image.open(file)
-    background.paste(img,(0, 0), img)
+aggressive_floodfill(background,  xy=(0, 0), value=random.choice(bg_colors))
+background.save('image.png')
 
-background.show()
