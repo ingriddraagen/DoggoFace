@@ -18,7 +18,11 @@ for folder in os.listdir('Doggoparts/'):
         img_folder + random.choice(os.listdir(img_folder))
     )
     background.paste(img, (0, 0), img)
+    print(img_folder)
+    if img_folder == "Doggoparts/01_Accessories/":
+        rgb_im = background.convert('RGB')
+        mouth_color = rgb_im.getpixel((0, 0))
+        aggressive_floodfill(background, xy=(1000, 1200), value=mouth_color)
 
 aggressive_floodfill(background,  xy=(0, 0), value=random.choice(bg_colors))
 background.save('image.png')
-
