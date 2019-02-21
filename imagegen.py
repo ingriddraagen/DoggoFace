@@ -18,7 +18,6 @@ bg_colors = [
     (233, 114, 76),
 ]
 # Selecting a random texture for the dog-s fur
-texture_choice = Image.open("Doggoparts/00_Texture/" + random.choice(os.listdir("Doggoparts/00_Texture/")))
 
 # Ingrid fucker opp alt
 
@@ -57,20 +56,22 @@ def get_mouth_color(base):
 
 def finish_base():
     doggoface = Image.open('Outputs/base.png')
-    accessory_filename = random.choice(os.listdir("Doggoparts/04_Accessories/"))
+
+    accessory_filename = return_radom_file_from_dir("Doggoparts/04_Accessories/")
     accessory =  Image.open("Doggoparts/04_Accessories/" + accessory_filename)
     insert_layer_to_image(doggoface, accessory)
     if fill(accessory_filename):
-        ImageDraw.floodfill(doggoface, xy=(1000, 1200), value=mouth_color, thresh=10)
+        ImageDraw.floodfill(doggoface, xy=(1000, 1200), value=get_mouth_color(doggoface), thresh=10)
     nose =  Image.open("Doggoparts/05_Noses/" + random.choice(os.listdir("Doggoparts/05_Noses/")))
     insert_layer_to_image(doggoface, nose)
     aggressive_floodfill(doggoface,  xy=(0, 0), value=random.choice(bg_colors))
 
     doggoface.save('Outputs/doggo.png')
 
-make_base()
-
-finish_base()
+while True:
+    texture_choice = Image.open("Doggoparts/00_Texture/" + random.choice(os.listdir("Doggoparts/00_Texture/")))
+    make_base()
+    finish_base()
 
 
 
