@@ -1,6 +1,7 @@
 from __future__ import print_function
 import os
 import random
+import time
 from PIL import Image, ImageDraw
 from floodfill import aggressive_floodfill
 
@@ -62,4 +63,7 @@ def make_face(face_parts_folder):
 
 
 while True:
+    start = time.time()
     make_face(face_parts_folder)
+    end = time.time()
+    print(end - start)

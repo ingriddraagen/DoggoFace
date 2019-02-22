@@ -4,3 +4,5 @@ image.png
 doggo.png
 facebase.png
 Outputs
+env
+__pycache__
