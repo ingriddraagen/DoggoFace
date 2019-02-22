@@ -63,7 +63,7 @@ def make_face(face_parts_folder):
                 insert_layer_to_image( file_to_fill , face )
                 if fill(file_to_fill):
                     print('filling')
-                    ImageDraw.floodfill(face, xy=(image_size*0.5, image_size*0.6), value=get_corner_color(face), thresh=500)
+                    aggressive_floodfill(face, xy=(image_size*0.5, image_size*0.6), value=get_corner_color(face))
     aggressive_floodfill(face,  xy=(0, 0), value=random.choice(bg_colors)) # Filling in the background color
     face.save('Outputs/face.png')
 
