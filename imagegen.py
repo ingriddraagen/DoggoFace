@@ -7,7 +7,11 @@ from floodfill import aggressive_floodfill
 
 # Folder in which the face-parts are located:
 face_parts_folder = "Doggoparts/"
-image_size = 512
+
+# Determining the size of the inputimages
+im = Image.open('Doggoparts/00_Texture/texture1_2.png')
+width, height = im.size
+image_size = width
 
 # Background colors
 bg_colors = [
