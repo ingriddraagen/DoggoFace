@@ -42,37 +42,24 @@ def fill(layer):
 def get_corner_color(image):
     return (image.getpixel((0, 0)))
 
-def make_base_from_x_first_folders(face_parts_folder, x):
-    base =  Image.new('RGB', (2048, 2048), color=(0, 255, 255))
-    for folder in os.listdir('Doggoparts/')[:x]:
-        folder = folder + '/'
-        imagelocation = face_parts_folder + folder
-        insert_random_imagelayer_to_image( imagelocation, base)
-    base.save('Outputs/base.png')
-
-def finish_base(face_parts_folder, x):
-    face = Image.open('Outputs/base.png')
-
-    for folder in os.listdir('Doggoparts/')[x:]:
+def make_face(face_parts_folder):
+    face =  Image.new('RGB', (2048, 2048), color=(0, 255, 255))
+    for folder in os.listdir('Doggoparts/'):
         folder = folder + '/'
         if ('fill' not in folder and 'ignore' not in folder):
             imagelocation = face_parts_folder + folder
-            insert_random_imagelayer_to_image( imagelocation, face)
+            insert_random_imagelayer_to_image( imagelocation, face )
         else:
             if 'ignore' in folder:
                 continue
             elif 'fill' in folder:
                 file_to_fill = random_file_from_dir(face_parts_folder + folder)
-                print (file_to_fill)
                 insert_layer_to_image( file_to_fill , face )
                 if fill(file_to_fill):
                     ImageDraw.floodfill(face, xy=(1000, 1200), value=get_corner_color(face), thresh=10)
     aggressive_floodfill(face,  xy=(0, 0), value=random.choice(bg_colors)) # Filling in the background color
     face.save('Outputs/face.png')
 
-def make_face( face_parts_folder, x = len(os.listdir(face_parts_folder)) ):
-    make_base_from_x_first_folders( face_parts_folder, x )
-    finish_base( face_parts_folder, x)
 
 while True:
-    make_face(face_parts_folder, 3)
+    make_face(face_parts_folder)
