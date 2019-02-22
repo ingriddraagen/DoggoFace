@@ -7,6 +7,7 @@ from floodfill import aggressive_floodfill
 
 # Folder in which the face-parts are located:
 face_parts_folder = "Doggoparts/"
+image_size = 512
 
 # Background colors
 bg_colors = [
@@ -44,7 +45,7 @@ def get_corner_color(image):
     return (image.getpixel((0, 0)))
 
 def make_face(face_parts_folder):
-    face =  Image.new('RGB', (2048, 2048), color=(0, 255, 255))
+    face =  Image.new('RGB', (image_size, image_size), color=(0, 255, 255))
     for folder in os.listdir('Doggoparts/'):
         folder = folder + '/'
         if ('fill' not in folder and 'ignore' not in folder):
@@ -57,7 +58,8 @@ def make_face(face_parts_folder):
                 file_to_fill = random_file_from_dir(face_parts_folder + folder)
                 insert_layer_to_image( file_to_fill , face )
                 if fill(file_to_fill):
-                    ImageDraw.floodfill(face, xy=(1000, 1200), value=get_corner_color(face), thresh=10)
+                    print('filling')
+                    ImageDraw.floodfill(face, xy=(image_size*0.5, image_size*0.6), value=get_corner_color(face), thresh=500)
     aggressive_floodfill(face,  xy=(0, 0), value=random.choice(bg_colors)) # Filling in the background color
     face.save('Outputs/face.png')
 
