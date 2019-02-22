@@ -5,10 +5,10 @@ from PIL import Image, ImageDraw
 from floodfill import aggressive_floodfill
 
 
-# Generate background image, choose from a selection of bg_colors (pretty pink, beautiful blue, etc.)
+# Background colors
 bg_colors = [
-    (252, 156, 246, 255),  # pink
-    (102, 153, 255, 255),  # blue
+    (252, 156, 246),  # pink
+    (102, 153, 255),  # blue
     (233, 175, 163),
     (238, 66, 102),
     (255, 210, 63),
@@ -17,111 +17,60 @@ bg_colors = [
     (255, 200, 87),
     (233, 114, 76),
 ]
-# Selecting a random texture for the dog-s fur
 
-# Ingrid fucker opp alt
-
-def insert_layer_to_image(image, layer):
+def insert_layer_to_image(imagefile, image):
+    layer = open_image_file(imagefile)
     image.paste(layer, (0, 0), layer)
     return
 
-def return_radom_file_from_dir(dir):
-    return (random.choice(os.listdir(dir)))
+def random_file_from_dir(dir):
+    return (dir + random.choice(os.listdir(dir)))
 
-def open_random_image_file(dir, random):
-    return (Image.open(dir + random))
+def open_image_file(imagefile):
+    return (Image.open(imagefile))
 
-def make_base():
-    base = Image.new('RGB', (2048, 2048), color=(0, 255, 255))
-    ear =  Image.open("Doggoparts/01_Ears/" + random.choice(os.listdir("Doggoparts/01_Ears/")))
-    face =  Image.open("Doggoparts/02_Faceshapes/" + random.choice(os.listdir("Doggoparts/02_Faceshapes/")))
-    eyes =  Image.open("Doggoparts/03_Eyes/" + random.choice(os.listdir("Doggoparts/03_Eyes/")))
-    insert_layer_to_image(base, texture_choice)
-    insert_layer_to_image(base, ear)
-    insert_layer_to_image(base, eyes)
-    insert_layer_to_image(base, face)
-    base.save('Outputs/base.png')
+def insert_random_imagelayer_to_image(dir, image):
+    insert_layer_to_image(random_file_from_dir(dir), image)
 
 def fill(layer):
-    if( layer[0] == 'n'):
+    if('no_fill' in layer):
         return False
     return True
 
-def get_mouth_color(base):
-    rgb_im = base.convert('RGB')
-    mouth_color = rgb_im.getpixel((0, 0))
-    return mouth_color
+def get_corner_color(image):
+    return (image.getpixel((0, 0)))
 
+def make_base_from_x_first_folders(face_parts_folder, x):
+    base =  Image.new('RGB', (2048, 2048), color=(0, 255, 255))
+    for folder in os.listdir('Doggoparts/')[:x]:
+        folder = folder + '/'
+        imagelocation = face_parts_folder + folder
+        insert_random_imagelayer_to_image( imagelocation, base)
+    base.save('Outputs/base.png')
 
+def finish_base(face_parts_folder, x):
+    face = Image.open('Outputs/base.png')
 
-def finish_base():
-    doggoface = Image.open('Outputs/base.png')
+    for folder in os.listdir('Doggoparts/')[x:]:
+        folder = folder + '/'
+        if ('fill' not in folder and 'ignore' not in folder):
+            imagelocation = face_parts_folder + folder
+            insert_random_imagelayer_to_image( imagelocation, face)
+        else:
+            if 'ignore' in folder:
+                continue
+            elif 'fill' in folder:
+                file_to_fill = random_file_from_dir(face_parts_folder + folder)
+                print (file_to_fill)
+                insert_layer_to_image( file_to_fill , face )
+                if fill(file_to_fill):
+                    ImageDraw.floodfill(face, xy=(1000, 1200), value=get_corner_color(face), thresh=10)
+    aggressive_floodfill(face,  xy=(0, 0), value=random.choice(bg_colors)) # Filling in the background color
+    face.save('Outputs/face.png')
 
-    accessory_filename = return_radom_file_from_dir("Doggoparts/04_Accessories/")
-    accessory =  Image.open("Doggoparts/04_Accessories/" + accessory_filename)
-    insert_layer_to_image(doggoface, accessory)
-    if fill(accessory_filename):
-        ImageDraw.floodfill(doggoface, xy=(1000, 1200), value=get_mouth_color(doggoface), thresh=10)
-    nose =  Image.open("Doggoparts/05_Noses/" + random.choice(os.listdir("Doggoparts/05_Noses/")))
-    insert_layer_to_image(doggoface, nose)
-    aggressive_floodfill(doggoface,  xy=(0, 0), value=random.choice(bg_colors))
-
-    doggoface.save('Outputs/doggo.png')
+def make_face( face_parts_folder, x ):
+    make_base_from_x_first_folders( face_parts_folder, x )
+    finish_base( face_parts_folder, x)
 
 while True:
-    texture_choice = Image.open("Doggoparts/00_Texture/" + random.choice(os.listdir("Doggoparts/00_Texture/")))
-    make_base()
-    finish_base()
-
-
-
-'''
-base.paste(snoot)
-base.show()
-base.save('testing.png')
-'''
-
-#base = Image.new('RGB', (2048, 2048), color=(0, 255, 255))
-#background.paste(texture_choice, (0, 0), texture_choice)
-#
-#
-#mouth =  Image.open("Doggoparts/02_Accessories/" + random.choice(os.listdir("Doggoparts/02_Accessories/")))
-#rgb_im = background.convert('RGB')
-#mouth_color = rgb_im.getpixel((0, 0))
-#mouth.save("temp.png")
-#aggressive_floodfill(mouth, xy=(900, 1400), value=mouth_color)
-#background.paste(mouth, (0, 0), mouth)
-#
-#
-#
-#
-#mouthfilled = Image.new('RGB', (2048, 2048), color=(0, 255, 255))
-#mouth =  Image.open("Doggoparts/02_Accessories/" + random.choice(os.listdir("Doggoparts/02_Accessories/")))
-#mouth_color = rgb_im.getpixel((0, 0))
-#aggressive_floodfill(mouth, xy=(900, 1400), value=mouth_color)
-#background.paste(mouth, (0, 0), mouth)
-#
-## med mindre dette faktisk funker
-#
-#
-#for folder in os.listdir('Doggoparts/')[1:]:
-#
-#    img_folder = 'Doggoparts/' + folder + '/'
-#    if img_folder == "Doggoparts/02_Accessories/":
-#        mouth =  Image.open("Doggoparts/02_Accessories/" + random.choice(os.listdir("Doggoparts/02_Accessories/")))
-#        rgb_im = background.convert('RGB')
-#        mouth_color = rgb_im.getpixel((0, 0))
-#        mouth.save("temp.png")
-#        aggressive_floodfill(mouth, xy=(900, 1400), value=mouth_color)
-#        background.paste(mouth, (0, 0), mouth)
-#        continue
-#    img = Image.open(
-#        img_folder + random.choice(os.listdir(img_folder))
-#    )
-#    print(img_folder)
-#    background.paste(img, (0, 0), img)
-#
-#
-#aggressive_floodfill(background,  xy=(0, 0), value=random.choice(bg_colors))
-#background.save('image.png')
-#
+    make_face("Doggoparts/", 3)
