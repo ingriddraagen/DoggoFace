@@ -4,6 +4,8 @@ import random
 from PIL import Image, ImageDraw
 from floodfill import aggressive_floodfill
 
+# Folder in which the face-parts are located:
+face_parts_folder = "Doggoparts/"
 
 # Background colors
 bg_colors = [
@@ -68,9 +70,9 @@ def finish_base(face_parts_folder, x):
     aggressive_floodfill(face,  xy=(0, 0), value=random.choice(bg_colors)) # Filling in the background color
     face.save('Outputs/face.png')
 
-def make_face( face_parts_folder, x ):
+def make_face( face_parts_folder, x = len(os.listdir(face_parts_folder)) ):
     make_base_from_x_first_folders( face_parts_folder, x )
     finish_base( face_parts_folder, x)
 
 while True:
-    make_face("Doggoparts/", 3)
+    make_face(face_parts_folder, 3)
