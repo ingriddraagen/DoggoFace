@@ -6,7 +6,7 @@ from PIL import Image, ImageDraw
 from floodfill import aggressive_floodfill
 
 # Folder in which the face-parts are located:
-face_parts_folder = "Doggoparts/"
+face_parts_folder = "Doggoparts/facecomponents/"
 
 # Determining the size of the inputimages
 im = Image.open('Doggoparts/00_Texture/texture1_2.png')
@@ -50,7 +50,8 @@ def get_corner_color(image):
 
 def make_face(face_parts_folder):
     face =  Image.new('RGB', (image_size, image_size), color=(0, 255, 255))
-    for folder in os.listdir('Doggoparts/'):
+    insert_random_imagelayer_to_image('Doggoparts/00_Texture/', face)
+    for folder in os.listdir('Doggoparts/facecomponents/'):
         folder = folder + '/'
         if ('fill' not in folder and 'ignore' not in folder):
             imagelocation = face_parts_folder + folder
