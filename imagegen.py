@@ -30,7 +30,7 @@ def main():
 
     # To generate only one image:
     # make_face()
-    
+
     # For a continuous face-generation:
     # make_face_continuous()
 
@@ -51,7 +51,7 @@ def make_face_continuous(file_name = output_file_name):
             global iterations
             output_file_name = output_folder + file_name + str(iterations) + ".png"
             start = time.time()
-            make_face(face_parts_folder)
+            make_face()
             iterations += 1
             end = time.time()
             print("time to complete image: " + str(end - start))
@@ -59,7 +59,7 @@ def make_face_continuous(file_name = output_file_name):
     else:
         while True:
             start = time.time()
-            make_face(face_parts_folder)
+            make_face()
             end = time.time()
             print("time to complete image: " + str(end - start))
             print(" ")
