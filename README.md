@@ -1,6 +1,8 @@
 # DoggoFace
 This is Geir's dog:
 ![Geir](Outputs/Examples/Geir.png)
+
+These are some random doggos:
 ![random doggo](Outputs/Examples/exampledoggos1.png)
 ![random doggo](Outputs/Examples/exampledoggos68.png)
 ![random doggo](Outputs/Examples/exampledoggos110.png)
