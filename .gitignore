@@ -4,7 +4,7 @@ image.png
 doggo.png
 facebase.png
 Outputs/*
-!Outputs/.gitkeep 
+!Outputs/exampledoggo.png
 env
 __pycache__
 

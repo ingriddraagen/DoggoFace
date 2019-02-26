@@ -1,2 +1,2 @@
 # DoggoFace
-![random doggo](Outputs/doggo.png?raw=true "Doggo1")
+![random doggo](Outputs/exampledoggo.png)
