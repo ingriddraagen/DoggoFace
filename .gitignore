@@ -3,7 +3,8 @@ background.png
 image.png
 doggo.png
 facebase.png
-Outputs
+Outputs/*
+!Outputs/.gitkeep 
 env
 __pycache__
 
