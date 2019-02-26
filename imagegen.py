@@ -17,11 +17,8 @@ texture_folder = outer_folder + "Textures/"
 background_color_folder = outer_folder + "Background_Colors/"
 
 # Where the finished image should be saved.
-output_file = "Outputs/face.png"
-    # Should you wish to make lots of faces:
-'''
-output_file = "Outputs/face" + iterations + ".png"
-'''
+output_folder = "Outputs/"
+output_file_name = output_folder + "face.png"
 
 
 # This is where the magic happens:
@@ -29,19 +26,37 @@ def main():
     # Determining the size of finished image:
     width, height = open_image_file(random_file_from_dir(texture_folder)).size
     image_size = width
+    make_face_continuous("dog")
 
+    # For a continuous face-generation use make_face_continuous()
+    # To generate several faces, use make_face_continuous(<filename =! face.png>)
+
+
+def make_face_continuous(file_name = output_file_name):
     # Printing how many possible combinations there are, cuz its fun:
     print ("There are " + int_presentation(how_many_combinations_are_there()) + " possible compinations")
     print (" ")
     print ("Now let's make some doggos!")
     print (" ")
 
-    while True:
-        start = time.time()
-        make_face(face_parts_folder)
-        end = time.time()
-        print("time to complete image: " + str(end - start))
-        print(" ")
+    global output_file_name
+    if (output_file_name != file_name):
+        while True:
+            global iterations
+            output_file_name = output_folder + file_name + str(iterations) + ".png"
+            start = time.time()
+            make_face(face_parts_folder)
+            iterations += 1
+            end = time.time()
+            print("time to complete image: " + str(end - start))
+            print(" ")
+    else:
+        while True:
+            start = time.time()
+            make_face(face_parts_folder)
+            end = time.time()
+            print("time to complete image: " + str(end - start))
+            print(" ")
 
 def int_presentation(int):
     i = -3
@@ -101,8 +116,7 @@ def fill(layer):
 def get_corner_color(image):
     return (image.getpixel((0, 0)))
 
-def make_face(face_parts_folder):
-    global iterations
+def make_face(face_parts_folder = face_parts_folder):
     width, height = open_image_file(random_file_from_dir(texture_folder)).size
     image_size = width
     face =  Image.new('RGB', (image_size, image_size), color=(0, 255, 255))
@@ -122,8 +136,7 @@ def make_face(face_parts_folder):
                 aggressive_floodfill(face, xy=(image_size*0.5, image_size*0.7), value=get_corner_color(face))
     # Filling in the background color:
     aggressive_floodfill(face,  xy=(0, 0), value=get_corner_color(open_image_file(random_file_from_dir(background_color_folder))))
-    face.save(output_file)
-    iterations += 1
+    face.save(output_file_name)
 
 
 
