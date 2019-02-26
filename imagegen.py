@@ -26,10 +26,16 @@ def main():
     # Determining the size of finished image:
     width, height = open_image_file(random_file_from_dir(texture_folder)).size
     image_size = width
-    make_face()
+    make_face_continuous()
 
-    # For a continuous face-generation use make_face_continuous()
-    # To generate several faces, use make_face_continuous(<filename =! face.png>)
+    # To generate only one image:
+    # make_face()
+    
+    # For a continuous face-generation:
+    # make_face_continuous()
+
+    # To generate several faces:
+    # make_face_continuous(<filename =! face.png>)
 
 
 def make_face_continuous(file_name = output_file_name):
