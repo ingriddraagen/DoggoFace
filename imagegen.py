@@ -5,44 +5,79 @@ import time
 from PIL import Image, ImageDraw
 from floodfill import aggressive_floodfill
 
-
+# Initiating variables:
 image_size = 0
 width = 0
+iterations = 0
 
-i=0
 
-face_parts_folder = "Doggoparts/facecomponents/"
-texture_folder = "Doggoparts/00_Texture/"
+# Folder-location of components:
+face_parts_folder = "Doggoparts/Facecomponents/"
+texture_folder = "Doggoparts/Texture/"
+background_color_folder = "Doggoparts/Background_colors/"
 
-# Background colors
-bg_colors = [
-(252, 156, 246),  # pink
-(102, 153, 255),  # blue
-(233, 175, 163),
-(238, 66, 102),
-(255, 210, 63),
-(84, 13, 110),
-(243, 252, 240),
-(255, 200, 87),
-(233, 114, 76),
-]
+# Where the finished image should be saved.
+output_file = "Outputs/face.png"
+# Should you wish to make lots of faces:
+'''
+output_file = "Outputs/face" + iterations + ".png"
+'''
 
 def main():
-
-    # Determining the size of the inputimages
+    # Determining the size of finished image:
     width, height = open_image_file(random_file_from_dir(texture_folder)).size
     image_size = width
-    print (image_size)
 
-
+    # Printing how many possible combinations there are, cuz its fun:
+    print ("There are " + int_presentation(how_many_combinations_are_there()) + " possible compinations")
+    print (" ")
+    print ("Now let's make some doggos!")
+    print (" ")
 
     while True:
         start = time.time()
         make_face(face_parts_folder)
         end = time.time()
-        print(end - start)
+        print("time to complete image: " + str(end - start))
         print(" ")
 
+def int_presentation(int):
+    i = -3
+    j = None
+    original_int = int
+    int_string = ""
+    while -i <= len(str(int))+3:
+        sub_string = str(original_int)[i:j]
+        if (len(sub_string) == 3):
+            sub_string = " " + sub_string
+        int_string = sub_string + int_string
+        j = i
+        i -= 3
+    return (int_string)
+
+def how_many_combinations_are_there():
+    possible_combinations = 0
+    files = 0
+    # number of textures:
+    for file in os.listdir(texture_folder):
+        files += 1
+    possible_combinations = possible_combinations * files
+    files = 0
+
+    # number of background colors:
+    for file in os.listdir(background_color_folder):
+        files += 1
+    possible_combinations = possible_combinations * files
+    files = 0
+
+    # number of different face-shapes
+    for folder in os.listdir(face_parts_folder):
+        folder = folder + "/"
+        for file in os.listdir(face_parts_folder+folder):
+            files += 1
+        possible_combinations = possible_combinations * files
+        files = 0
+    return (possible_combinations)
 
 def insert_layer_to_image(imagefile, image):
     layer = open_image_file(imagefile)
@@ -67,32 +102,28 @@ def get_corner_color(image):
     return (image.getpixel((0, 0)))
 
 def make_face(face_parts_folder):
-    global i
+    global iterations
     width, height = open_image_file(random_file_from_dir(texture_folder)).size
     image_size = width
     face =  Image.new('RGB', (image_size, image_size), color=(0, 255, 255))
     # Adding random texture to the image
-    insert_random_imagelayer_to_image('Doggoparts/00_Texture/', face)
+    insert_random_imagelayer_to_image(texture_folder, face)
 
     # Adding faceparts to the image, in the
     for folder in os.listdir(face_parts_folder):
         folder = folder + '/'
-        if ('fill' not in folder and 'ignore' not in folder):
+        if ('fill' not in folder):
             imagelocation = face_parts_folder + folder
             insert_random_imagelayer_to_image( imagelocation, face )
         else:
-            if 'ignore' in folder:
-                continue
-            elif 'fill' in folder:
-                file_to_fill = random_file_from_dir(face_parts_folder + folder)
-                insert_layer_to_image( file_to_fill , face )
-                if fill(file_to_fill):
-                    print('filling')
-                    print(face)
-                    aggressive_floodfill(face, xy=(image_size*0.5, image_size*0.7), value=get_corner_color(face))
-    aggressive_floodfill(face,  xy=(0, 0), value=random.choice(bg_colors)) # Filling in the background color
-    face.save('Outputs/face.png')
-    i += 1
+            file_to_fill = random_file_from_dir(face_parts_folder + folder)
+            insert_layer_to_image( file_to_fill , face )
+            if fill(file_to_fill):
+                aggressive_floodfill(face, xy=(image_size*0.5, image_size*0.7), value=get_corner_color(face))
+    # Filling in the background color:
+    aggressive_floodfill(face,  xy=(0, 0), value=get_corner_color(open_image_file(random_file_from_dir(background_color_folder))))
+    face.save(output_file)
+    iterations += 1
 
 
 
