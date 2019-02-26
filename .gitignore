@@ -5,7 +5,7 @@ doggo.png
 facebase.png
 Outputs/*
 !Outputs/Examples
-Doggoparts/Assets
+Doggoparts/Assets/Image_components
 env
 __pycache__
 

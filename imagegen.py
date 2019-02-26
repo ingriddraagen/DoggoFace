@@ -10,19 +10,21 @@ image_size = 0
 width = 0
 iterations = 0
 
-
 # Folder-location of components:
-face_parts_folder = "Doggoparts/Facecomponents/"
-texture_folder = "Doggoparts/Texture/"
-background_color_folder = "Doggoparts/Background_colors/"
+outer_folder = "Doggoparts/"
+face_parts_folder = outer_folder + "Face_Features/"
+texture_folder = outer_folder + "Textures/"
+background_color_folder = outer_folder + "Background_Colors/"
 
 # Where the finished image should be saved.
 output_file = "Outputs/face.png"
-# Should you wish to make lots of faces:
+    # Should you wish to make lots of faces:
 '''
 output_file = "Outputs/face" + iterations + ".png"
 '''
 
+
+# This is where the magic happens:
 def main():
     # Determining the size of finished image:
     width, height = open_image_file(random_file_from_dir(texture_folder)).size
@@ -60,9 +62,7 @@ def how_many_combinations_are_there():
     files = 0
     # number of textures:
     for file in os.listdir(texture_folder):
-        files += 1
-    possible_combinations = possible_combinations * files
-    files = 0
+        possible_combinations += 1
 
     # number of background colors:
     for file in os.listdir(background_color_folder):
