@@ -9,6 +9,8 @@ from floodfill import aggressive_floodfill
 image_size = 0
 width = 0
 
+i=0
+
 face_parts_folder = "Doggoparts/facecomponents/"
 texture_folder = "Doggoparts/00_Texture/"
 
@@ -65,9 +67,9 @@ def get_corner_color(image):
     return (image.getpixel((0, 0)))
 
 def make_face(face_parts_folder):
+    global i
     width, height = open_image_file(random_file_from_dir(texture_folder)).size
     image_size = width
-    print (image_size)
     face =  Image.new('RGB', (image_size, image_size), color=(0, 255, 255))
     # Adding random texture to the image
     insert_random_imagelayer_to_image('Doggoparts/00_Texture/', face)
@@ -90,6 +92,7 @@ def make_face(face_parts_folder):
                     aggressive_floodfill(face, xy=(image_size*0.5, image_size*0.7), value=get_corner_color(face))
     aggressive_floodfill(face,  xy=(0, 0), value=random.choice(bg_colors)) # Filling in the background color
     face.save('Outputs/face.png')
+    i += 1
 
 
 
