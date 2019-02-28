@@ -85,12 +85,6 @@ def how_many_combinations_are_there():
     for file in os.listdir(texture_folder):
         possible_combinations += 1
 
-    # number of background colors:
-    for file in os.listdir(background_color_folder):
-        files += 1
-    possible_combinations = possible_combinations * files
-    files = 0
-
     # number of different face-shapes
     for folder in os.listdir(face_parts_folder):
         folder = folder + "/"
