@@ -35,18 +35,18 @@ def main():
     # make_face_continuous()
 
     # To generate several faces:
-    # make_face_continuous(<filename =! face.png>)
+    # make_face_continuous(<filename>)
 
 
 def make_face_continuous(file_name = output_file_name):
     # Printing how many possible combinations there are, cuz its fun:
-    print ("There are " + int_presentation(how_many_combinations_are_there()) + " possible compinations")
+    print ("There are " + int_presentation(how_many_combinations_are_there()) + " possible combinations")
     print (" ")
     print ("Now let's make some doggos!")
     print (" ")
 
     global output_file_name
-    if (output_file_name != file_name):
+    if (output_file_name is not file_name):
         while True:
             global iterations
             output_file_name = output_folder + file_name + str(iterations) + ".png"
