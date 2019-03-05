@@ -9,7 +9,7 @@ All features should work with all instances of the different features, and shoul
 ### Exporting the layers
 After installing the plugin mentioned previously, open Gimp and go to "File>Export layers...". In the pop-up window, press "Settings>Show More Settings". Press "Add Procedure..." and "Add Constraint..." to set up the settings like this:
 
-<img src="Tools/plugin_settings.png" width="100">
+<img src="Tools/plugin_settings.png" width="50%">
 
 After adding the procedure gimp_layer_scale, a pop-up will prompt you to set a new width and height. What you decide here will be the size of the final image. This can be changed later, should you wish to change the size. The features in the Doggoparts-folder are 1024x1024, but you are free to change the size according to your needs. Just remember that you have to export all the layers, and overwrite the files, if you wish to use a different size than 1024 x 1024.
 
