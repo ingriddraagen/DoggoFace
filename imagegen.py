@@ -26,7 +26,7 @@ def main():
     # Determining the size of finished image:
     width, height = open_image_file(random_file_from_dir(texture_folder)).size
     image_size = width
-    make_face_continuous()
+    make_face_continuous("Faces/face")
 
     # To generate only one image:
     # make_face()
@@ -47,8 +47,11 @@ def make_face_continuous(file_name = output_file_name):
 
     global output_file_name
     if (output_file_name != file_name):
+        global iterations
+        folder = file_name.split('/')[0]
+        for file in os.listdir(output_folder + folder + '/'):
+            iterations += 1
         while True:
-            global iterations
             output_file_name = output_folder + file_name + str(iterations) + ".png"
             start = time.time()
             make_face()
