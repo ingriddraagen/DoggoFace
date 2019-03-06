@@ -18,10 +18,10 @@ The recommended constraint-settings will enable you to avoid having to overwrite
 ## Example Doggos
 
 ### This is Geir's dog:
-<img src="Outputs/Examples/exampledoggos68.png" width="30%">
+<img src="Outputs/Examples/Geir.png" width="30%">
 
 ### These are some random doggos:
-<img src="Outputs/Examples/exampledoggos68.png" width="30%">
-<img src="Outputs/Examples/exampledoggos110.png" width="30%">
-<img src="Outputs/Examples/exampledoggos127.png" width="30%">
-<img src="Outputs/Examples/exampledoggos260.png" width="30%">
+<img src="Outputs/Examples/exampledoggos110.png" width="30%" display="inline">
+<img src="Outputs/Examples/exampledoggos127.png" width="30%" display="inline">
+<img src="Outputs/Examples/exampledoggos68.png" width="30%" display="inline">
+<img src="Outputs/Examples/exampledoggos260.png" width="30%" display="inline">
