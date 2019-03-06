@@ -26,7 +26,7 @@ def main():
     # Determining the size of finished image:
     width, height = open_image_file(random_file_from_dir(texture_folder)).size
     image_size = width
-    make_face_continuous("Faces/face")
+    make_face_continuous("face")
 
     # To generate only one image:
     # make_face()
@@ -44,7 +44,7 @@ def make_face_continuous(file_name = output_file_name):
     print (" ")
     print ("Now let's make some doggos!")
     print (" ")
-
+    global iterations
     global output_file_name
     if (output_file_name is not file_name):
         while True:
