@@ -46,15 +46,7 @@ def make_face_continuous(file_name = output_file_name):
     print (" ")
 
     global output_file_name
-<<<<<<< HEAD
-    if (output_file_name != file_name):
-        global iterations
-        folder = file_name.split('/')[0]
-        for file in os.listdir(output_folder + folder + '/'):
-            iterations += 1
-=======
     if (output_file_name is not file_name):
->>>>>>> 6d95e51221839f25e40152167954fac2d520016e
         while True:
             output_file_name = output_folder + file_name + str(iterations) + ".png"
             start = time.time()
