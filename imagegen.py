@@ -16,10 +16,6 @@ output_folder = BASE_DIR + r"/DoggoFace/Outputs/"
 output_file_name = output_folder + "face.png"
 
 
-def generate_face():
-    make_face()
-
-
 def insert_layer_to_image(layer, image):
     layer = Image.open(layer)
     image.paste(layer, (0, 0), layer)
@@ -41,7 +37,7 @@ def get_corner_color(image):
     return image.getpixel((0, 0))
 
 
-def make_face():
+def generate_face():
     width, height = Image.open(random_file_from_dir(texture_folder)).size
     image_size = width
     face = Image.new('RGB', (image_size, image_size), color=(0, 255, 255))
@@ -62,7 +58,8 @@ def make_face():
     # Filling in the background color:
     aggressive_floodfill(face, xy=(0, 0),
                          value=get_corner_color(Image.open(random_file_from_dir(background_color_folder))))
-    face.save(output_file_name)
+    return face
+    # face.save(output_file_name)
 
 
 if __name__ == '__main__':
