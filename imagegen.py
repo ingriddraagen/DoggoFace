@@ -36,7 +36,7 @@ def generate_face():
     paste_random_layer_onto_image(texture_folder, face)
 
     # stack doogo-layers onto the image
-    for folder_name in os.listdir(face_parts_folder):
+    for folder_name in sorted(os.listdir(face_parts_folder)):  # bugs out on linux of not sorted
         folder_name += '/'
         layer = random_file_from_dir(face_parts_folder + folder_name)
         paste_layer_onto_image(layer=layer, image=face)
