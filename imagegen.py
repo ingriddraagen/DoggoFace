@@ -1,7 +1,7 @@
 import os
 import random
 from PIL import Image
-from .floodfill import aggressive_floodfill
+from .floodfill import aggressive_floodfill  # slight modification of PIL's floodfill function
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + r"/DoggoFace/Doggoparts/"
 
@@ -29,19 +29,17 @@ def get_corner_color(image):
 
 
 def generate_face():
-    width, height = Image.open(random_file_from_dir(texture_folder)).size
-    image_size = width
-    face = Image.new('RGB', (image_size, image_size), color=(0, 255, 255))
-    # Adding random texture (the doggos fur) to the image
+    width, height = Image.open(random_file_from_dir(texture_folder)).size  # image should be square
+    face = Image.new('RGB', (width, height), color=(0, 255, 255))
+    # Adding random texture (the doggo's fur) to the image
     paste_random_layer_onto_image(texture_folder, face)
 
     # stack doogo-layers onto the image
     for folder_name in sorted(os.listdir(face_parts_folder)):  # bugs out on linux of not sorted
-        folder_name += '/'
-        layer = random_file_from_dir(face_parts_folder + folder_name)
+        layer = random_file_from_dir(face_parts_folder + '/' + folder_name)
         paste_layer_onto_image(layer=layer, image=face)
         if 'fill' in folder_name and 'no_fill' not in layer:
-            aggressive_floodfill(face, xy=(image_size * 0.5, image_size * 0.7), value=get_corner_color(face))
+            aggressive_floodfill(face, xy=(width * 0.5, width * 0.7), value=get_corner_color(face))
     # Filling in the background color:
     aggressive_floodfill(face, xy=(0, 0),
                          value=get_corner_color(Image.open(random_file_from_dir(background_color_folder))))
