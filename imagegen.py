@@ -2,17 +2,17 @@ from __future__ import print_function
 import os
 import random
 import time
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageEnhance, ImageChops
 from floodfill import aggressive_floodfill
 
+
 # Initiating variables:
-image_size = 0
-width = 0
 iterations = 0
 
 # Folder-location of components:
 outer_folder = "Doggoparts/"
-face_parts_folder = outer_folder + "Face_Features/"
+face_base_folder = outer_folder + "Face/"
+face_feature_folder = outer_folder + "Face_Features/"
 texture_folder = outer_folder + "Textures/"
 background_color_folder = outer_folder + "Background_Colors/"
 
@@ -25,8 +25,7 @@ output_file_name = output_folder + "face.png"
 def main():
     # Determining the size of finished image:
     width, height = open_image_file(random_file_from_dir(texture_folder)).size
-    image_size = width
-    make_face_continuous("face")
+    make_face()
 
     # To generate only one image:
     # make_face()
@@ -85,9 +84,9 @@ def how_many_combinations_are_there():
         possible_combinations += 1
 
     # number of different face-shapes
-    for folder in os.listdir(face_parts_folder):
+    for folder in os.listdir(face_feature_folder):
         folder = folder + "/"
-        for file in os.listdir(face_parts_folder+folder):
+        for file in os.listdir(face_feature_folder+folder):
             files += 1
         possible_combinations = possible_combinations * files
         files = 0
@@ -115,26 +114,38 @@ def fill(layer):
 def get_corner_color(image):
     return (image.getpixel((0, 0)))
 
-def make_face(face_parts_folder = face_parts_folder):
+def make_face():
     width, height = open_image_file(random_file_from_dir(texture_folder)).size
-    image_size = width
-    face =  Image.new('RGB', (image_size, image_size), color=(0, 255, 255))
-    # Adding random texture to the image
-    insert_random_imagelayer_to_image(texture_folder, face)
+    face_base =  Image.new('RGBA', (width, height), color = (255, 255, 255, 0) )
+    face =  Image.new('RGBA', (width, height), color = (255, 255, 255, 0) )
+    texture = Image.new('RGBA', (width, height), color = (255, 255, 255, 255) )
 
-    # Adding faceparts to the image, in the
-    for folder in os.listdir(face_parts_folder):
+    # Selecting texture
+    insert_random_imagelayer_to_image(texture_folder, texture)
+
+    # Selecting the face-shape and ears
+    for folder in os.listdir(face_base_folder):
+        folder = folder + '/'
+        imagelocation = face_base_folder + folder
+        insert_random_imagelayer_to_image( imagelocation, face_base )
+
+    # Combining the faceshape, texture and background color
+    face = ImageChops.multiply(face_base, texture)
+    face = Image.alpha_composite( open_image_file(random_file_from_dir(background_color_folder)), face)
+    face = face.convert('RGB')
+
+    # Adding faceparts to the face
+    for folder in os.listdir(face_feature_folder):
         folder = folder + '/'
         if ('fill' not in folder):
-            imagelocation = face_parts_folder + folder
+            imagelocation = face_feature_folder + folder
             insert_random_imagelayer_to_image( imagelocation, face )
         else:
-            file_to_fill = random_file_from_dir(face_parts_folder + folder)
+            file_to_fill = random_file_from_dir(face_feature_folder + folder)
             insert_layer_to_image( file_to_fill , face )
             if fill(file_to_fill):
-                aggressive_floodfill(face, xy=(image_size*0.5, image_size*0.7), value=get_corner_color(face))
-    # Filling in the background color:
-    aggressive_floodfill(face,  xy=(0, 0), value=get_corner_color(open_image_file(random_file_from_dir(background_color_folder))))
+                aggressive_floodfill(face, xy=(width*0.5, height*0.7), value=get_corner_color(texture))
+
     face.save(output_file_name)
 
 
