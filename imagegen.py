@@ -129,9 +129,14 @@ def make_face():
         imagelocation = face_base_folder + folder
         insert_random_imagelayer_to_image( imagelocation, face_base )
 
+    # Fix some alias stuff
+    #face_base = face_base.convert('L')
+    #face_base = face_base.point(lambda x: 0 if x<128 else 255, '1')
+    #face_base = face_base.convert('RGBA')
     # Combining the faceshape, texture and background color
     face = ImageChops.multiply(face_base, texture)
     face = Image.alpha_composite( open_image_file(random_file_from_dir(background_color_folder)), face)
+    face.save('test.png')
     face = face.convert('RGB')
 
     # Adding faceparts to the face
