@@ -23,10 +23,10 @@ def random_file_from_dir(directory):
 def paste_random_layer_onto_image(folder_name, image):
     paste_layer_onto_image(random_file_from_dir(folder_name), image)
 
-
+    
 def get_corner_color(image):
     return image.getpixel((0, 0))
-
+  
 
 def generate_face():
     width, height = Image.open(random_file_from_dir(texture_folder)).size  # image should be square
