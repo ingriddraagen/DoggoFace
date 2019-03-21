@@ -4,7 +4,7 @@ import random
 import time
 from PIL import Image, ImageDraw, ImageEnhance, ImageChops
 from floodfill import aggressive_floodfill
-
+import time
 
 # Initiating variables:
 iterations = 0
@@ -25,7 +25,7 @@ output_file_name = output_folder + "face.png"
 def main():
     # Determining the size of finished image:
     width, height = open_image_file(random_file_from_dir(texture_folder)).size
-    make_face()
+    make_face_continuous()
 
     # To generate only one image:
     # make_face()
@@ -54,6 +54,9 @@ def make_face_continuous(file_name = output_file_name):
             end = time.time()
             print("time to complete image: " + str(end - start))
             print(" ")
+            time.sleep(5)
+
+
     else:
         while True:
             start = time.time()
@@ -61,6 +64,8 @@ def make_face_continuous(file_name = output_file_name):
             end = time.time()
             print("time to complete image: " + str(end - start))
             print(" ")
+            time.sleep(5)
+
 
 def int_presentation(int):
     i = -3
@@ -92,7 +97,7 @@ def how_many_combinations_are_there():
         files = 0
     return (possible_combinations)
 
-def insert_layer_to_image(imagefile, image):
+def insert_layer_to_image(imagefile, image, mask = 0):
     layer = open_image_file(imagefile)
     image.paste(layer, (0, 0), layer)
     return
@@ -107,9 +112,10 @@ def insert_random_imagelayer_to_image(dir, image):
     insert_layer_to_image(random_file_from_dir(dir), image)
 
 def fill(layer):
-    if('no_fill' in layer):
-        return False
-    return True
+    return 'fill' in layer
+
+def mask(layer):
+    return 'mask' in layer
 
 def get_corner_color(image):
     return (image.getpixel((0, 0)))
@@ -129,10 +135,9 @@ def make_face():
         imagelocation = face_base_folder + folder
         insert_random_imagelayer_to_image( imagelocation, face_base )
 
-    # Fix some alias stuff
-    #face_base = face_base.convert('L')
-    #face_base = face_base.point(lambda x: 0 if x<128 else 255, '1')
-    #face_base = face_base.convert('RGBA')
+    # creating a mask
+    face_mask = face_base.convert('L').point(lambda x: 0, '1')
+
     # Combining the faceshape, texture and background color
     face = ImageChops.multiply(face_base, texture)
     face = Image.alpha_composite( open_image_file(random_file_from_dir(background_color_folder)), face)
@@ -142,15 +147,17 @@ def make_face():
     # Adding faceparts to the face
     for folder in os.listdir(face_feature_folder):
         folder = folder + '/'
-        if ('fill' not in folder):
+        if ('fill' not in folder and 'mask' not in folder):
             imagelocation = face_feature_folder + folder
             insert_random_imagelayer_to_image( imagelocation, face )
-        else:
+        elif ('fill' in folder):
             file_to_fill = random_file_from_dir(face_feature_folder + folder)
             insert_layer_to_image( file_to_fill , face )
             if fill(file_to_fill):
                 aggressive_floodfill(face, xy=(width*0.5, height*0.7), value=get_corner_color(texture))
-
+        else:
+            use_mask = random_file_from_dir(face_feature_folder + folder)
+            insert_layer_to_image( use_mask , face, face_mask )
     face.save(output_file_name)
 
 
