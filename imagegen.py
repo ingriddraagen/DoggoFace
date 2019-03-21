@@ -25,7 +25,7 @@ output_file_name = output_folder + "face.png"
 def main():
     # Determining the size of finished image:
     width, height = open_image_file(random_file_from_dir(texture_folder)).size
-    make_face()
+    make_face_continuous()
 
     # To generate only one image:
     # make_face()
