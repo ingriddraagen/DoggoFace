@@ -4,7 +4,6 @@ from PIL import Image, ImageChops
 from .floodfill import aggressive_floodfill  # slight modification of PIL's floodfill function
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + r"/DoggoFace/Doggoparts/"
-
 # Folder-location of components:
 face_base_folder = BASE_DIR + "Face/"
 face_features_folder = BASE_DIR + "Face_Features/"
@@ -31,7 +30,7 @@ def get_corner_color(image):
 
 def generate_face():
     width, height = Image.open(random_file_from_dir(texture_folder)).size  # image should be square
-    face_shape = Image.new('RGBA', (width, height), color = (255, 255, 255, 0) )
+    face_shape = Image.new('RGBA', (width, height), color=(255, 255, 255, 0))
     face_base = Image.new('RGBA', (width, height), color=(255, 255, 255, 0))
     texture = Image.new('RGBA', (width, height), color=(255, 255, 255, 255))
     background_mask = Image.new('RGBA', (width, height), color=(255, 255, 255, 0))
@@ -76,20 +75,17 @@ def generate_face():
 
     # Adding faceparts to the face
     for folder_name in sorted(os.listdir(face_features_folder)):
-        folder_name = folder_name + '/'
+        layer = random_file_from_dir(face_features_folder + folder_name + '/')
         if 'fill' not in folder_name and 'mask' not in folder_name:
-            imagelocation = face_features_folder + folder_name
-            paste_random_layer_onto_image(imagelocation, face)
+            paste_layer_onto_image(layer, face)
         elif 'fill' in folder_name:
-            file_to_fill = random_file_from_dir(face_features_folder + folder_name)
-            paste_layer_onto_image(file_to_fill, face)
-            if 'no_fill' not in file_to_fill:
+            paste_layer_onto_image(layer, face)
+            if 'no_fill' not in layer:
                 face = face.convert('RGB')
                 aggressive_floodfill(face, xy=(width*0.5, height*0.7), value=get_corner_color(texture))
         else:
-            use_mask_filename = random_file_from_dir(face_features_folder + folder_name)
-            use_mask = Image.open(use_mask_filename)
-            if 'mask' in use_mask_filename:
+            use_mask = Image.open(layer)
+            if 'mask' in layer:
                 use_mask = ImageChops.multiply(face_mask, use_mask)
             face.paste(use_mask, (0, 0), use_mask)
 
