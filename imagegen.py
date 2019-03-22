@@ -111,7 +111,7 @@ def insert_random_imagelayer_to_image(dir, image):
     insert_layer_to_image(random_file_from_dir(dir), image)
 
 def fill(layer):
-    return 'fill' in layer
+    return 'no_fill' not in layer
 
 def mask(layer):
     return 'mask' in layer
@@ -180,6 +180,7 @@ def make_face():
             file_to_fill = random_file_from_dir(face_feature_folder + folder)
             insert_layer_to_image( file_to_fill , face )
             if fill(file_to_fill):
+                print ('filling')
                 face = face.convert('RGB')
                 aggressive_floodfill(face, xy=(width*0.5, height*0.7), value=get_corner_color(texture))
         else:
