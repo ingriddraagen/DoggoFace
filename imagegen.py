@@ -183,9 +183,10 @@ def make_face():
                 face = face.convert('RGB')
                 aggressive_floodfill(face, xy=(width*0.5, height*0.7), value=get_corner_color(texture))
         else:
-            use_mask = open_image_file(random_file_from_dir(face_feature_folder + folder))
-            if (mask(use_mask)):
-                use_mask = ImageChops.multiply(face_mask, use_mask)    
+            use_mask_filename = random_file_from_dir(face_feature_folder + folder)
+            use_mask = open_image_file(use_mask_filename)
+            if (mask(use_mask_filename)):
+                use_mask = ImageChops.multiply(face_mask, use_mask)
             face.paste(use_mask, (0,0), use_mask)
     face.save(output_file_name)
 
