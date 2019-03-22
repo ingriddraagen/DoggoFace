@@ -25,7 +25,7 @@ output_file_name = output_folder + "face.png"
 def main():
     # Determining the size of finished image:
     width, height = open_image_file(random_file_from_dir(texture_folder)).size
-    make_face_continuous()
+    make_face()
 
     # To generate only one image:
     # make_face()
@@ -64,7 +64,6 @@ def make_face_continuous(file_name = output_file_name):
             end = time.time()
             print("time to complete image: " + str(end - start))
             print(" ")
-            time.sleep(5)
 
 
 def int_presentation(int):
@@ -97,7 +96,7 @@ def how_many_combinations_are_there():
         files = 0
     return (possible_combinations)
 
-def insert_layer_to_image(imagefile, image, mask = 0):
+def insert_layer_to_image(imagefile, image):
     layer = open_image_file(imagefile)
     image.paste(layer, (0, 0), layer)
     return
@@ -122,27 +121,54 @@ def get_corner_color(image):
 
 def make_face():
     width, height = open_image_file(random_file_from_dir(texture_folder)).size
+    face_shape = Image.new('RGBA', (width, height), color = (255, 255, 255, 0) )
     face_base =  Image.new('RGBA', (width, height), color = (255, 255, 255, 0) )
     face =  Image.new('RGBA', (width, height), color = (255, 255, 255, 0) )
     texture = Image.new('RGBA', (width, height), color = (255, 255, 255, 255) )
+    background_mask = Image.new('RGBA', (width, height), color = (255, 255, 255, 0))
+    face_mask = Image.new('RGBA', (width, height), color = (255, 255, 255, 0))
 
     # Selecting texture
     insert_random_imagelayer_to_image(texture_folder, texture)
 
+
     # Selecting the face-shape and ears
     for folder in os.listdir(face_base_folder):
         folder = folder + '/'
+        if 'Faceshapes' in folder:
+            faceshape = random_file_from_dir(face_base_folder + folder)
+            insert_layer_to_image( faceshape , face_shape )
+            insert_layer_to_image( faceshape , face_base )
+            continue
         imagelocation = face_base_folder + folder
         insert_random_imagelayer_to_image( imagelocation, face_base )
 
-    # creating a mask
-    face_mask = face_base.convert('L').point(lambda x: 0, '1')
+    # Creating a mask for the background
+    face_base_data = face_base.getdata()
+    background_data = []
+    for pixel in face_base_data:
+        if pixel[3] > 100:
+            background_data.append((255, 255, 255, 0))
+        else:
+            background_data.append((255, 255, 255, 255))
+    background_mask.putdata(background_data)
+
+
+    # Creating a mask for the face
+    face_shape_data = face_shape.getdata()
+    face_data = []
+    for pixel in face_shape_data:
+        if pixel[3] < 10:
+            face_data.append((255, 255, 255, 0))
+        else:
+            face_data.append((255, 255, 255, 255))
+    face_mask.putdata(face_data)
 
     # Combining the faceshape, texture and background color
     face = ImageChops.multiply(face_base, texture)
-    face = Image.alpha_composite( open_image_file(random_file_from_dir(background_color_folder)), face)
-    face.save('test.png')
-    face = face.convert('RGB')
+    background = ImageChops.multiply(open_image_file(random_file_from_dir(background_color_folder)), background_mask)
+    face.paste(background, (0,0), background)
+
 
     # Adding faceparts to the face
     for folder in os.listdir(face_feature_folder):
@@ -154,10 +180,12 @@ def make_face():
             file_to_fill = random_file_from_dir(face_feature_folder + folder)
             insert_layer_to_image( file_to_fill , face )
             if fill(file_to_fill):
+                face = face.convert('RGB')
                 aggressive_floodfill(face, xy=(width*0.5, height*0.7), value=get_corner_color(texture))
         else:
-            use_mask = random_file_from_dir(face_feature_folder + folder)
-            insert_layer_to_image( use_mask , face, face_mask )
+            use_mask = open_image_file(random_file_from_dir(face_feature_folder + folder))
+            use_mask = ImageChops.multiply(face_mask, use_mask)
+            face.paste(use_mask, (0,0), use_mask)
     face.save(output_file_name)
 
 
