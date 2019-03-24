@@ -14,18 +14,43 @@ outer_folder = "Doggoparts/"
 face_base_folder = outer_folder + "Face/"
 face_feature_folder = outer_folder + "Face_Features/"
 texture_folder = outer_folder + "Textures/"
-background_color_folder = outer_folder + "Background_Colors/"
 
 # Where the finished image should be saved.
 output_folder = "Outputs/"
 output_file_name = output_folder + "face.png"
 
 
+background_colors = [(32, 30, 80, 255),
+    (252, 122, 87, 255),
+    (99, 193, 50, 255),
+    (53, 134, 0, 255),
+    (233, 210, 244, 255),
+    (99, 176, 205, 255),
+    (27, 153, 139, 255),
+    (150, 224, 114, 255),
+    (252, 175, 88, 255),
+    (247, 92, 3, 255),
+    (4, 167, 119, 255),
+    (255, 135, 57, 255),
+    (229, 116, 188, 255),
+    (34, 116, 165, 255),
+    (221, 44, 100, 255),
+    (193, 121, 185, 255),
+    (255, 67, 101, 255),
+    (245, 83, 154, 255),
+    (153, 0, 255, 255),
+    (45, 93, 123, 255),
+    (130, 2, 99, 255),
+    (252, 211, 45, 255),
+    (221, 44, 100, 255),
+    (196, 241, 190, 255),
+    (159, 216, 203, 255)]
+
 # This is where the magic happens:
 def main():
     # Determining the size of finished image:
     width, height = open_image_file(random_file_from_dir(texture_folder)).size
-    make_face()
+    make_face_continuous()
 
     # To generate only one image:
     # make_face()
@@ -88,6 +113,14 @@ def how_many_combinations_are_there():
         possible_combinations += 1
 
     # number of different face-shapes
+    for folder in os.listdir(face_base_folder):
+        folder = folder + "/"
+        for file in os.listdir(face_base_folder+folder):
+            files += 1
+        possible_combinations = possible_combinations * files
+        files = 0
+
+    # number of different face-features
     for folder in os.listdir(face_feature_folder):
         folder = folder + "/"
         for file in os.listdir(face_feature_folder+folder):
@@ -121,13 +154,14 @@ def get_corner_color(image):
 
 def make_face():
     width, height = open_image_file(random_file_from_dir(texture_folder)).size
+
     face_shape = Image.new('RGBA', (width, height), color = (255, 255, 255, 0) )
     face_base =  Image.new('RGBA', (width, height), color = (255, 255, 255, 0) )
     face =  Image.new('RGBA', (width, height), color = (255, 255, 255, 0) )
     texture = Image.new('RGBA', (width, height), color = (255, 255, 255, 255) )
     background_mask = Image.new('RGBA', (width, height), color = (255, 255, 255, 0))
     face_mask = Image.new('RGBA', (width, height), color = (255, 255, 255, 0))
-
+    background = Image.new('RGBA', (width, height), color = random.choice(background_colors))
     # Selecting texture
     insert_random_imagelayer_to_image(texture_folder, texture)
 
@@ -166,7 +200,7 @@ def make_face():
 
     # Combining the faceshape, texture and background color
     face = ImageChops.multiply(face_base, texture)
-    background = ImageChops.multiply(open_image_file(random_file_from_dir(background_color_folder)), background_mask)
+    background = ImageChops.multiply(background, background_mask)
     face.paste(background, (0,0), background)
 
 
