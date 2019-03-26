@@ -14,6 +14,7 @@ outer_folder = "Doggoparts/"
 face_base_folder = outer_folder + "Face/"
 face_feature_folder = outer_folder + "Face_Features/"
 texture_folder = outer_folder + "Textures/"
+accessories_folder = outer_folder + 'Accessories/'
 
 # Where the finished image should be saved.
 output_folder = "Outputs/"
@@ -62,6 +63,7 @@ def main():
     # make_face_continuous(<filename>)
 
 
+
 def make_face_continuous(file_name = output_file_name):
     # Printing how many possible combinations there are, cuz its fun:
     print ("There are " + int_presentation(how_many_combinations_are_there()) + " possible combinations")
@@ -106,27 +108,20 @@ def int_presentation(int):
     return (int_string)
 
 def how_many_combinations_are_there():
-    possible_combinations = 0
+    possible_combinations = 1
     files = 0
     # number of textures:
-    for file in os.listdir(texture_folder):
-        possible_combinations += 1
+    for category_folder in os.listdir(outer_folder):
+        category_folder = outer_folder + category_folder + '/'
+        for folder in os.listdir(category_folder):
+            folder = category_folder + folder + '/'
+            if 'Texture' in folder or 'Seasonal' in folder:
+                continue
+            for file in os.listdir(folder):
+                files += 1
+            possible_combinations = files *possible_combinations
+            files = 0
 
-    # number of different face-shapes
-    for folder in os.listdir(face_base_folder):
-        folder = folder + "/"
-        for file in os.listdir(face_base_folder+folder):
-            files += 1
-        possible_combinations = possible_combinations * files
-        files = 0
-
-    # number of different face-features
-    for folder in os.listdir(face_feature_folder):
-        folder = folder + "/"
-        for file in os.listdir(face_feature_folder+folder):
-            files += 1
-        possible_combinations = possible_combinations * files
-        files = 0
     return (possible_combinations)
 
 def insert_layer_to_image(imagefile, image):
@@ -149,11 +144,18 @@ def fill(layer):
 def mask(layer):
     return 'mask' in layer
 
+def no_ear(layer):
+    return 'no_ear' in layer
+
 def get_corner_color(image):
     return (image.getpixel((0, 0)))
 
+
 def make_face():
     width, height = open_image_file(random_file_from_dir(texture_folder)).size
+
+    hat_probability = 100
+    is_season = False
 
     face_shape = Image.new('RGBA', (width, height), color = (255, 255, 255, 0) )
     face_base =  Image.new('RGBA', (width, height), color = (255, 255, 255, 0) )
@@ -165,6 +167,11 @@ def make_face():
     # Selecting texture
     insert_random_imagelayer_to_image(texture_folder, texture)
 
+    hat = random.randint(1,100)
+
+    if hat < hat_probability:
+        hat = True
+        hat_file = random_file_from_dir(accessories_folder + 'Hats/')
 
     # Selecting the face-shape and ears
     for folder in os.listdir(face_base_folder):
@@ -174,6 +181,10 @@ def make_face():
             insert_layer_to_image( faceshape , face_shape )
             insert_layer_to_image( faceshape , face_base )
             continue
+        elif ( hat and no_ear(hat_file) ):
+            print (( hat and no_ear(hat_file)))
+            if 'Ears' in folder:
+                continue
         imagelocation = face_base_folder + folder
         insert_random_imagelayer_to_image( imagelocation, face_base )
 
@@ -223,6 +234,17 @@ def make_face():
             if (mask(use_mask_filename)):
                 use_mask = ImageChops.multiply(face_mask, use_mask)
             face.paste(use_mask, (0,0), use_mask)
+    random_number = random.randint(1,101)
+
+    if (hat < hat_probability):
+        for folder in os.listdir(accessories_folder):
+            if 'Seasonal' in folder and not is_season:
+                continue
+            folder = folder + '/'
+            imagelocation = accessories_folder + folder
+            insert_random_imagelayer_to_image( imagelocation, face )
+
+
     face.save(output_file_name)
 
 
