@@ -6,19 +6,16 @@ from PIL import Image, ImageDraw, ImageEnhance, ImageChops
 from floodfill import aggressive_floodfill
 import time
 
-# Initiating variables:
-iterations = 0
+
+BASE_DIR = os.path.dirname(os.path.dirname(
+    os.path.abspath(__file__))) + r"/DoggoFace/Doggoparts/"
+
 
 # Folder-location of components:
-outer_folder = "Doggoparts/"
-face_base_folder = outer_folder + "Face/"
-face_feature_folder = outer_folder + "Face_Features/"
-texture_folder = outer_folder + "Textures/"
-accessories_folder = outer_folder + 'Accessories/'
-
-# Where the finished image should be saved.
-output_folder = "Outputs/"
-output_file_name = output_folder + "face.png"
+face_base_folder = BASE_DIR + r"Face/"
+face_feature_folder = BASE_DIR + r"Face_Features/"
+texture_folder = BASE_DIR + r"Textures/"
+accessories_folder = BASE_DIR + r'Accessories/'
 
 
 background_colors = [(32, 30, 80, 255),
@@ -60,21 +57,6 @@ def main():
 
     # To generate several faces:
     # make_face_continuous(<filename>)
-
-
-def int_presentation(int):
-    i = -3
-    j = None
-    original_int = int
-    int_string = ""
-    while -i <= len(str(int))+3:
-        sub_string = str(original_int)[i:j]
-        if (len(sub_string) == 3):
-            sub_string = " " + sub_string
-        int_string = sub_string + int_string
-        j = i
-        i -= 3
-    return (int_string)
 
 
 def insert_layer_to_image(imagefile, image):
@@ -206,7 +188,7 @@ def make_face():
             imagelocation = accessories_folder + folder
             insert_random_imagelayer_to_image(imagelocation, face)
 
-    face.save(output_file_name)
+    return face
 
 
 if __name__ == '__main__':
